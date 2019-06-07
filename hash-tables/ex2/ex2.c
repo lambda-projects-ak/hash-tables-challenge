@@ -34,6 +34,9 @@ char **reconstruct_trip(Ticket **tickets, int length)
   // once all tickets at added to route, set destination as NONE
   route[current] = "NONE";
 
+  // clean up hash table
+  destroy_hash_table(ht);
+
   return route;
 }
 
@@ -49,7 +52,7 @@ void print_route(char **route, int length)
 int main(void)
 {
   // Short test
-  Ticket **tickets = malloc(4 * sizeof(Ticket *));
+  Ticket **tickets = malloc(3 * sizeof(Ticket *));
 
   Ticket *ticket_1 = malloc(sizeof(Ticket));
   ticket_1->source = "NONE";
@@ -66,14 +69,9 @@ int main(void)
   ticket_3->destination = "TEST";
   tickets[2] = ticket_3;
 
-  Ticket *ticket_4 = malloc(sizeof(Ticket));
-  ticket_4->source = "TEST";
-  ticket_4->destination = "NONE";
-  tickets[3] = ticket_4;
+  print_route(reconstruct_trip(tickets, 3), 3); // PDX, DCA, NONE
 
-  print_route(reconstruct_trip(tickets, 4), 4); // PDX, DCA, NONE
-
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < 3; i++)
   {
     free(tickets[i]);
   }
