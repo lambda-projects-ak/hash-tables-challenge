@@ -5,6 +5,7 @@
 
 Answer *get_indices_of_item_weights(int *weights, int length, int limit)
 {
+  Answer *answer = malloc(sizeof(Answer));
   HashTable *ht = create_hash_table(16);
   // goal - find two items who sum weights equals limit, return instance of answer
 
@@ -26,10 +27,23 @@ Answer *get_indices_of_item_weights(int *weights, int length, int limit)
     if (weights[i] + weights[index] == limit)
     {
       printf("%s\n", "match found");
-      printf("%d\n", i);
-      printf("%d\n", index);
+      if (i > index)
+      {
+        answer->index_1 = i;
+        answer->index_2 = index;
+        return answer;
+      }
+      else
+      {
+        answer->index_2 = i;
+        answer->index_1 = index;
+        return answer;
+      }
     }
   }
+
+  destroy_hash_table(ht);
+  free(answer);
 
   return NULL;
 }
