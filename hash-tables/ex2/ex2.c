@@ -18,20 +18,20 @@ char **reconstruct_trip(Ticket **tickets, int length)
 
   // start at src none, get destination, add destination to route
   int current = 0;
-  char *destination = hash_table_retrieve(ht, "NONE");
-  route[current] = destination;
-  current++;
+  // get first destination
+  char *current_location = hash_table_retrieve(ht, "NONE");
 
-  // then use current location to get next_destination
-  // continue until hitting destination == NONE;
-  while (strcmp(destination, "NONE") != 0)
+  // setting current location to route at current index
+  // increment current index each new location
+  // then loop over all tickets until reaching destination == NONE
+  while (strcmp(current_location, "NONE") != 0)
   {
-    char *next_destination = hash_table_retrieve(ht, destination);
-    route[current] = next_destination;
-    destination = hash_table_retrieve(ht, next_destination);
+    route[current] = current_location;
     current++;
+    current_location = hash_table_retrieve(ht, current_location);
   }
 
+  // once all tickets at added to route, set destination as NONE
   route[current] = "NONE";
 
   return route;
@@ -49,7 +49,7 @@ void print_route(char **route, int length)
 int main(void)
 {
   // Short test
-  Ticket **tickets = malloc(3 * sizeof(Ticket *));
+  Ticket **tickets = malloc(4 * sizeof(Ticket *));
 
   Ticket *ticket_1 = malloc(sizeof(Ticket));
   ticket_1->source = "NONE";
@@ -63,12 +63,17 @@ int main(void)
 
   Ticket *ticket_3 = malloc(sizeof(Ticket));
   ticket_3->source = "DCA";
-  ticket_3->destination = "NONE";
+  ticket_3->destination = "TEST";
   tickets[2] = ticket_3;
 
-  print_route(reconstruct_trip(tickets, 3), 3); // PDX, DCA, NONE
+  Ticket *ticket_4 = malloc(sizeof(Ticket));
+  ticket_4->source = "TEST";
+  ticket_4->destination = "NONE";
+  tickets[3] = ticket_4;
 
-  for (int i = 0; i < 3; i++)
+  print_route(reconstruct_trip(tickets, 4), 4); // PDX, DCA, NONE
+
+  for (int i = 0; i < 4; i++)
   {
     free(tickets[i]);
   }
